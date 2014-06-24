@@ -63,7 +63,7 @@ public abstract class AccessoryCommunicator {
             running = true;
 
             while (running) {
-                byte[] msg = new byte[256];
+                byte[] msg = new byte[Constants.BUFFER_SIZE_IN_BYTES];
                 try {
                     //Handle incoming messages
                     int len = inStream.read(msg);

@@ -22,9 +22,6 @@ import butterknife.OnClick;
 
 public class ChatActivity extends BaseChatActivity {
 
-    private static final int USB_TIMEOUT_IN_MS = 100;
-    private static final int BUFFER_SIZE_IN_BYTES = 256;
-
     private final AtomicBoolean keepThreadAlive = new AtomicBoolean(true);
     private final List<String> sendBuffer = new ArrayList<>();
 
@@ -87,11 +84,11 @@ public class ChatActivity extends BaseChatActivity {
             if (!claimResult) {
                 printLineToUI("Could not claim device");
             } else {
-                final byte buff[] = new byte[BUFFER_SIZE_IN_BYTES];
+                final byte buff[] = new byte[Constants.BUFFER_SIZE_IN_BYTES];
                 printLineToUI("Claimed interface - ready to communicate");
 
                 while (keepThreadAlive.get()) {
-                    final int bytesTransferred = connection.bulkTransfer(endpointIn, buff, buff.length, USB_TIMEOUT_IN_MS);
+                    final int bytesTransferred = connection.bulkTransfer(endpointIn, buff, buff.length, Constants.USB_TIMEOUT_IN_MS);
                     if (bytesTransferred > 0) {
                         printLineToUI("device> "+new String(buff, 0, bytesTransferred));
                     }
@@ -99,7 +96,7 @@ public class ChatActivity extends BaseChatActivity {
                     synchronized (sendBuffer) {
                         if (sendBuffer.size()>0) {
                             final byte[] sendBuff=sendBuffer.get(0).toString().getBytes();
-                            connection.bulkTransfer(endpointOut, sendBuff, sendBuff.length, USB_TIMEOUT_IN_MS);
+                            connection.bulkTransfer(endpointOut, sendBuff, sendBuff.length, Constants.USB_TIMEOUT_IN_MS);
                             sendBuffer.remove(0);
                         }
                     }
