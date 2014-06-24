@@ -25,7 +25,6 @@ public class ChatActivity extends BaseChatActivity {
             @Override
             public void onConnected() {
                 printLineToUI("connected");
-
             }
 
             @Override
