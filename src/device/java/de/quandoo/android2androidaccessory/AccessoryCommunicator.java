@@ -1,6 +1,5 @@
 package de.quandoo.android2androidaccessory;
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbManager;
@@ -16,17 +15,17 @@ import java.io.IOException;
 public abstract class AccessoryCommunicator {
 
     private UsbManager usbManager;
-    private Activity activity;
+    private Context context;
     private Handler sendHandler;
     private ParcelFileDescriptor fileDescriptor;
     private FileInputStream inStream;
     private FileOutputStream outStream;
     private boolean running;
 
-    public AccessoryCommunicator(final Activity activity) {
-        this.activity = activity;
+    public AccessoryCommunicator(final Context context) {
+        this.context = context;
 
-        usbManager = (UsbManager) this.activity.getSystemService(Context.USB_SERVICE);
+        usbManager = (UsbManager) this.context.getSystemService(Context.USB_SERVICE);
 
         final UsbAccessory[] accessoryList = usbManager.getAccessoryList();
 
@@ -46,11 +45,7 @@ public abstract class AccessoryCommunicator {
     }
 
     private void receive(final byte[] payload, final int length) {
-        activity.runOnUiThread(new Runnable() {
-            public void run() {
-                onReceive(payload, length);
-            }
-        });
+        onReceive(payload, length);
     }
 
     public abstract void onReceive(byte[] msg, int len);
@@ -78,13 +73,8 @@ public abstract class AccessoryCommunicator {
                         len = inStream.read(msg);
                     }
                 } catch (final Exception e) {
-                    activity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            onError("USB Receive Failed " + e.toString() + "\n");
-                            closeAccessory();
-                        }
-                    });
-
+                    onError("USB Receive Failed " + e.toString() + "\n");
+                    closeAccessory();
                 }
             }
         }
@@ -105,11 +95,7 @@ public abstract class AccessoryCommunicator {
                     try {
                         outStream.write((byte[]) msg.obj);
                     } catch (final Exception e) {
-                        activity.runOnUiThread(new Runnable() {
-                            public void run() {
-                                onError("USB Send Failed " + e.toString() + "\n");
-                            }
-                        });
+                        onError("USB Send Failed " + e.toString() + "\n");
                     }
                 }
             };
