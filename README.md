@@ -46,7 +46,7 @@ A core problem was to figure out how to get a device to switch to accessory mode
         initStringControlTransfer(connection, 4, "http://quandoo.de"); // URI
         initStringControlTransfer(connection, 5, "42"); // SERIAL
 
-        connection.cont .controlTransfer(0x40, 53, 0, 0, new byte[]{}, 0, 100);
+        connection.controlTransfer(0x40, 53, 0, 0, new byte[]{}, 0, 100);
 
         connection.close();
 
