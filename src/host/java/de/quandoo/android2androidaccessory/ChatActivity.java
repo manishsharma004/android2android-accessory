@@ -44,7 +44,7 @@ public class ChatActivity extends BaseChatActivity {
 
         @Override
         public void run() {
-            final UsbManager mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+            final UsbManager usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
             final UsbDevice device=getIntent().getParcelableExtra(ConnectActivity.DEVICE_EXTRA_KEY);
 
@@ -75,7 +75,7 @@ public class ChatActivity extends BaseChatActivity {
                 return;
             }
 
-            final UsbDeviceConnection connection = mUsbManager.openDevice(device);
+            final UsbDeviceConnection connection = usbManager.openDevice(device);
 
             if (connection == null) {
                 printLineToUI("Could not open device");
