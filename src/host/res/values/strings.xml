@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Android2AndroidAccessory Host</string>
+    <string name="local_prompt"><![CDATA[host> ]]></string>
+    <string name="info_text">Please plug-in some Android-device into USB that has the Accessory2Accessory device app installed</string>
+
+</resources>
