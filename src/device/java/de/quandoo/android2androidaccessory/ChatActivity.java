@@ -13,8 +13,8 @@ public class ChatActivity extends BaseChatActivity {
         communicator = new AccessoryCommunicator(this) {
 
             @Override
-            public void onReceive(byte[] msg, int len) {
-                printLineToUI("host> " + new String(msg, 0, len));
+            public void onReceive(byte[] payload, int length) {
+                printLineToUI("host> " + new String(payload, 0, length));
             }
 
             @Override

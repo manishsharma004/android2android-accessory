@@ -48,7 +48,7 @@ public abstract class AccessoryCommunicator {
         onReceive(payload, length);
     }
 
-    public abstract void onReceive(byte[] msg, int len);
+    public abstract void onReceive(final byte[] payload, final int length);
 
     public abstract void onError(String msg);
 
