@@ -1,7 +1,7 @@
 What is it?
 ===========
 
-This is as an example on how leverage the accessory mode to communicate between 2 Android devices. You connect 2 devices via one USB-cable + one USB-OTG adapter and chat between devices ( or exchange any other data in a real-world application ).
+This is as an example on how to leverage the accessory mode to communicate between 2 Android devices. You connect 2 devices via one USB-cable + one USB-OTG adapter and chat between devices ( or exchange any other data in a real-world application ).
 
 The App comes in 2 flavors - one host flavor and one device flavor. You need to install one of these flavors on each device.
 
