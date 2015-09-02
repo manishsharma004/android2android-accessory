@@ -29,7 +29,7 @@ public class ConnectActivity extends ActionBarActivity {
 
     @Override
     protected void onResume() {
-        super.onPostResume();
+        super.onResume();
 
         final HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
 
