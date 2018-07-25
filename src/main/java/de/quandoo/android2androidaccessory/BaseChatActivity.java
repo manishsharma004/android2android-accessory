@@ -8,16 +8,16 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import butterknife.OnClick;
 
 public abstract class BaseChatActivity extends ActionBarActivity {
 
-    @InjectView(R.id.content_text)
+    @BindView(R.id.content_text)
     TextView contentTextView;
 
-    @InjectView(R.id.input_edittext)
+    @BindView(R.id.input_edittext)
     EditText input;
 
     @OnClick(R.id.send_button)
@@ -39,7 +39,7 @@ public abstract class BaseChatActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_chat);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
     }
 

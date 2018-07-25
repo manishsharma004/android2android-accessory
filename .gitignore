@@ -3,3 +3,4 @@ local.properties
 .idea/workspace.xml
 build/
 gradle.properties
+.idea/

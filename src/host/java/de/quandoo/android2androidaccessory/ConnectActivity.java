@@ -1,18 +1,24 @@
 package de.quandoo.android2androidaccessory;
 
+import android.annotation.TargetApi;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
 
 public class ConnectActivity extends ActionBarActivity {
+
+    private static String TAG = "ConnectActivity";
 
     public static final String DEVICE_EXTRA_KEY = "device";
     private UsbManager mUsbManager;
@@ -22,9 +28,10 @@ public class ConnectActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
+        Log.i(TAG, "onCreate: mUsbManager=" + mUsbManager);
     }
 
     @Override
@@ -33,8 +40,10 @@ public class ConnectActivity extends ActionBarActivity {
 
         final HashMap<String, UsbDevice> deviceList = mUsbManager.getDeviceList();
 
+        Log.i(TAG, "onResume: deviceList=" + deviceList);
+
         if (deviceList == null || deviceList.size() == 0) {
-            final Intent intent=new Intent(this,InfoActivity.class);
+            final Intent intent=new Intent(this, InfoActivity.class);
             startActivity(intent);
 
             finish();
@@ -53,9 +62,10 @@ public class ConnectActivity extends ActionBarActivity {
     }
 
     private boolean searchForUsbAccessory(final HashMap<String, UsbDevice> deviceList) {
+        Log.i(TAG, "searchForUsbAccessory: deviceList=" + deviceList);
         for (UsbDevice device:deviceList.values()) {
             if (isUsbAccessory(device)) {
-
+                Log.i(TAG, "searchForUsbAccessory(if (isUsbAccessory(device))): " + device);
                 final Intent intent=new Intent(this,ChatActivity.class);
                 intent.putExtra(DEVICE_EXTRA_KEY, device);
                 startActivity(intent);
@@ -68,14 +78,35 @@ public class ConnectActivity extends ActionBarActivity {
         return false;
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private boolean isUsbAccessory(final UsbDevice device) {
+        Log.i(TAG, "isUsbAccessory: device=[name=" + device.getDeviceName() +
+                ", manufacturerName=" + device.getManufacturerName() +
+                ", productName=" + device.getProductName() +
+                ", deviceId=" + device.getDeviceId() +
+                ", productId=" + device.getProductId() +
+                ", deviceProtocol=" + device.getDeviceProtocol() + "]");
         return (device.getProductId() == 0x2d00) || (device.getProductId() == 0x2d01);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private boolean initAccessory(final UsbDevice device) {
+        Log.i(TAG, "initAccessory: device=[name=" + device.getDeviceName() +
+                ", manufacturerName=" + device.getManufacturerName() +
+                ", productName=" + device.getProductName() +
+                ", deviceId=" + device.getDeviceId() +
+                ", productId=" + device.getProductId() +
+                ", deviceProtocol=" + device.getDeviceProtocol() + "]");
 
+        if (!mUsbManager.hasPermission(device)) {
+            Log.i(TAG, "initAccessory: Do not have permission on device=" + device.getProductName());
+            Intent intent = new Intent(this, this.getClass());
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            Log.i(TAG, "initAccessory: Trying to get permissions with pendingIntent=" + pendingIntent);
+            mUsbManager.requestPermission(device, pendingIntent);
+        }
         final UsbDeviceConnection connection = mUsbManager.openDevice(device);
-
+        Log.i(TAG, "initAccessory: conneciton=" + connection);
         if (connection == null) {
             return false;
         }
@@ -97,6 +128,9 @@ public class ConnectActivity extends ActionBarActivity {
     private void initStringControlTransfer(final UsbDeviceConnection deviceConnection,
                                            final int index,
                                            final String string) {
-        deviceConnection.controlTransfer(0x40, 52, 0, index, string.getBytes(), string.length(), Constants.USB_TIMEOUT_IN_MS);
+        Log.i(TAG, "initStringControlTransfer: deviceConnection=" + deviceConnection +
+                ", index=" + index + ", string=" + string);
+        deviceConnection.controlTransfer(0x40, 52, 0, index,
+                string.getBytes(), string.length(), Constants.USB_TIMEOUT_IN_MS);
     }
 }

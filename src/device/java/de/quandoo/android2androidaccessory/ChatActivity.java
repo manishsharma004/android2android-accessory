@@ -2,6 +2,9 @@ package de.quandoo.android2androidaccessory;
 
 import android.os.Bundle;
 
+import de.quandoo.android2androidaccessory.AccessoryCommunicator;
+import de.quandoo.android2androidaccessory.BaseChatActivity;
+
 public class ChatActivity extends BaseChatActivity {
 
     private AccessoryCommunicator communicator;
